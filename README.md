@@ -19,7 +19,7 @@ Code configuration is handled by CMake. Building out of source is required. CMak
 
 To build run `make`, to install `make install` which accepts variable `DESTDIR` as usual.
 
-Note: For MacOS, have macports installed along with cmake, gmake and lxqt-build-tools. It is highly recommended that you install the current dependencies for qterminal-devel if you want to modify this version instead of the macports version. For building and installation, run the following commands.
+Note: For MacOS, have macports installed along with cmake, gmake and lxqt-build-tools. It is highly recommended that you install the current dependencies for qterminal-devel if you want to modify this version instead of the macports version. For building and installation, run the following commands.</br>
   `mkdir build && cd build`
   `cmake .. && gmake`
   `cp -r qterminal /Applications`
