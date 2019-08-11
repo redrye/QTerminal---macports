@@ -142,6 +142,10 @@ int main(int argc, char *argv[])
     #endif
 
     QString workdir, shell_command;
+    
+    /** If opening via App launcher, or via command line, login with the default bash shell **/
+    if(argc < 2) shell_command.append(QString::fromStdString("bash --login -i"));
+    
     bool dropMode;
     parse_args(argc, argv, workdir, shell_command, dropMode);
 
