@@ -16,25 +16,48 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef FONT_DIALOG
-#define FONT_DIALOG
+#include "fontdialog.h"
 
-#include "ui_fontdialog.h"
-#include "properties.h"
-
-
-
-class FontDialog : public QDialog, public Ui::FontDialog
+FontDialog::FontDialog(const QFont &f)
+    : QDialog(nullptr)
 {
-    Q_OBJECT
-public:
-    FontDialog(const QFont &f);
-    QFont getFont();
+    setupUi(this);
 
-private slots:
-    void setFontSample(const QFont &f);
-    void setFontSize();
+    fontComboBox->setFontFilters(QFontComboBox::MonospacedFonts
+                                 | QFontComboBox::NonScalableFonts
+                                 | QFontComboBox::ScalableFonts);
 
-};
+    fontComboBox->setCurrentFont(f);
+    fontComboBox->setEditable(false);
 
-#endif
+    sizeSpinBox->setValue(f.pointSize());
+
+    setFontSample(f);
+
+    connect(fontComboBox, &QFontComboBox::currentFontChanged,
+            this, &FontDialog::setFontSample);
+    connect(sizeSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+            this, &FontDialog::setFontSize);
+}
+
+QFont FontDialog::getFont()
+{
+    QFont f = fontComboBox->currentFont();
+    f.setPointSize(sizeSpinBox->value());
+    return f;
+}
+
+void FontDialog::setFontSample(const QFont &f)
+{
+    previewLabel->setFont(f);
+    QString sample(QLatin1String("%1 %2 pt"));
+    previewLabel->setText(sample.arg(f.family()).arg(f.pointSize()));
+}
+
+void FontDialog::setFontSize()
+{
+    const QFont &f = getFont();
+    previewLabel->setFont(f);
+    QString sample(QLatin1String("%1 %2 pt"));
+    previewLabel->setText(sample.arg(f.family()).arg(f.pointSize()));
+}

@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2014 by Petr Vanek                                      *
- *   petr@scribus.info                                                     *
+ *   Copyright (C) 2017 by Nathan Osman                                    *
+ *   nathan@quickmediasolutions.com                                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +16,32 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef FONT_DIALOG
-#define FONT_DIALOG
+#ifndef TABBAR_H
+#define TABBAR_H
 
-#include "ui_fontdialog.h"
-#include "properties.h"
+#include <QSize>
+#include <QTabBar>
 
-
-
-class FontDialog : public QDialog, public Ui::FontDialog
+class TabBar : public QTabBar
 {
     Q_OBJECT
+
 public:
-    FontDialog(const QFont &f);
-    QFont getFont();
 
-private slots:
-    void setFontSample(const QFont &f);
-    void setFontSize();
+    explicit TabBar(QWidget *parent);
 
+    void setFixedWidth(bool fixedWidth);
+    void setFixedWidthValue(int value);
+    void updateWidth();
+
+protected:
+
+    QSize tabSizeHint(int index) const override;
+
+private:
+
+    bool mFixedWidth;
+    int mFixedWidthValue;
 };
 
-#endif
+#endif // TABBAR_H

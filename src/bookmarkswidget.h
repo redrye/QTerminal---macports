@@ -16,25 +16,61 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef FONT_DIALOG
-#define FONT_DIALOG
+#ifndef BOOKMARKSWIDGET_H
+#define BOOKMARKSWIDGET_H
 
-#include "ui_fontdialog.h"
-#include "properties.h"
+#include "ui_bookmarkswidget.h"
+
+class AbstractBookmarkItem;
+class BookmarksModel;
 
 
-
-class FontDialog : public QDialog, public Ui::FontDialog
+class BookmarksWidget : public QWidget, Ui::BookmarksWidget
 {
     Q_OBJECT
+
 public:
-    FontDialog(const QFont &f);
-    QFont getFont();
+    BookmarksWidget(QWidget *parent=nullptr);
+    ~BookmarksWidget() override;
+
+    void setup();
+
+signals:
+    void callCommand(const QString &cmd);
+
+private:
+    BookmarksModel *m_model;
 
 private slots:
-    void setFontSample(const QFont &f);
-    void setFontSize();
+    void handleCommand(const QModelIndex& index);
+};
 
+
+class BookmarksModel : public QAbstractItemModel
+{
+    Q_OBJECT
+
+public:
+    BookmarksModel(QObject *parent = nullptr);
+    ~BookmarksModel() override;
+
+    void setup();
+
+    QVariant data(const QModelIndex &index, int role) const override;
+    QVariant headerData(int section, Qt::Orientation orientation,
+                        int role = Qt::DisplayRole) const override;
+
+    QModelIndex index(int row, int column,
+                      const QModelIndex &parent = QModelIndex()) const override;
+    QModelIndex parent(const QModelIndex &index) const override;
+
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+
+private:
+    AbstractBookmarkItem *getItem(const QModelIndex &index) const;
+    AbstractBookmarkItem *m_root;
 };
 
 #endif
+
